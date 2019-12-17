@@ -1,0 +1,30 @@
+<div class="col-md-4 mx-auto">
+  <div class="card text-center">
+    <div class="card-header">
+      <h3>Edit Movie</h3>
+    </div>
+    <div class="card-body">
+      <form action="/movies/edit-movie/{{movie._id}}?_method=PUT" method="POST">
+      <input type="hidden" name="_method" value="PUT">
+        <div class="form-group">
+          <input type="text" name="title" class="form-control" placeholder="Title" value="{{movie.title}}" autofocus/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="genre" class="form-control" placeholder="Genre" value="{{movie.genre}}" />
+        </div>
+        <div class="form-group">
+          <input type="text" name="score" class="form-control" placeholder="Score" value="{{movie.score}}"/>
+        </div>
+        <div class="form-group">
+          <input type="text" name="year" class="form-control" placeholder="Year" value="{{movie.year}}"/>
+        </div>
+        
+        <div class="form-group">
+          <button class="btn btn-secondary btn-block" type="submit">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

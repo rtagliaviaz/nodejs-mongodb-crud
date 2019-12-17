@@ -1,36 +1,39 @@
-const express = require('express');
+const { Router} = require('express');
 const MovieModel = require('../models/MovieModel');
 
-const app = express();
+const router = Router();
 
 //read
-app.get('/movies', async (req, res) => {
+router.get('/movies', async (req, res) => {
   const movies = await MovieModel.find({});
-
   try {
-    res.send(movies);
+    res.render('movies/all', {movies});
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
-//create
-app.post('/movies', async (req, res) => {
-  const movies = new MovieModel(req.body);
+//new movie
+router.get('/movies/add', (req, res) => {
+  res.render('movies/new-movie');
+});
 
+//create
+router.post('/movies/new-movie', async (req, res) => {
+  const movies = new MovieModel(req.body);
   try {
     await movies.save();
-    res.send(movies);
+    res.redirect('/movies');
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //delete
-app.delete('/movies/:id', async (req, res) => {
+router.delete('/movies/delete/:id', async (req, res) => {
   try {
     const movies = await MovieModel.findByIdAndDelete(req.params.id)
-
+    res.redirect('/movies');
     if (!movies) res.status(404).send("No item found")
     res.status(200).send()
   } catch (err) {
@@ -39,15 +42,20 @@ app.delete('/movies/:id', async (req, res) => {
 })
 
 //update
-app.put('/movies/:id', async(req, res) => {
-  const movies = await MovieModel.find({});
+
+router.get('/movies/edit/:id', async (req, res) => {
+  const movie = await MovieModel.findById(req.params.id);
+   res.render('movies/edit-movie', { movie });
+});
+
+router.put('/movies/edit-movie/:id', async(req, res) => {
+  const movie = req.body
  try {
-   await MovieModel.findByIdAndUpdate(req.params.id, req.body);
-   await MovieModel.save();
-   res.send(movies);
+   await MovieModel.findByIdAndUpdate(req.params.id, movie);
+   res.redirect('/movies');
  } catch (err) {
    res.status(500).send(err)
  }
 
 });
-module.exports = app
+module.exports = router
